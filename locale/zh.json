@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "SuperAgent",
+    "description": "基于官方原型的通用智能体，统一接收消息，在独立 DSH 会话中并发执行任务。"
+  }
+}

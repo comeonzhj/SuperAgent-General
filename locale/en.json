@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "SuperAgent",
+    "description": "A general-purpose SuperAgent adapted from the official prototype, with isolated DSH worker sessions."
+  }
+}

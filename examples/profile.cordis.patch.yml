@@ -1,0 +1,5 @@
+# 可选配置示例：普通使用保持插件默认设置即可。
+# 在多个 DSH profile 同时运行本插件时，为各实例设置不同的数据目录。
+- id: dsh-superagent
+  config:
+    stateDir: /absolute/path/to/superagent-data
