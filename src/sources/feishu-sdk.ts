@@ -29,7 +29,8 @@ export class FeishuApi {
   constructor(appId: string, appSecret: string) { this.client = new Lark.Client({ appId, appSecret, appType: Lark.AppType.SelfBuild, loggerLevel: Lark.LoggerLevel.error }) }
   async request<T>(method: string, url: string, data?: unknown, params?: unknown): Promise<T> {
     if (!url.startsWith('/open-apis/') || url.includes('..') || /[?#]/.test(url)) throw new Error('请使用飞书开放平台的接口路径。')
-    const result = await this.client.request({ method, url, data, params, timeout: 20000 }) as { code?: number; data?: T; bot?: T }
+    // Match the SDK's generated API methods: Feishu expects repeated keys for array query parameters.
+    const result = await this.client.request({ method, url, data, params, timeout: 20000, paramsSerializer: { indexes: null } }) as { code?: number; data?: T; bot?: T }
     if (result.code) throw new CliError(`飞书操作未完成（${result.code}），请检查应用及资源权限。`, result.code)
     return (result.data ?? result.bot ?? result) as T
   }
