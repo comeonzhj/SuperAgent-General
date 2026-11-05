@@ -2,7 +2,7 @@
   "name": "dsh-superagent-general",
   "author": "SuperAgent General contributors; upstream: DeepSeek Harness Team",
   "license": "MIT",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "基于官方 SuperAgent 原型适配的通用 DSH 插件",
   "type": "module",
@@ -29,7 +29,8 @@
     "skills",
     "docs/USER-GUIDE.md",
     "docs/UPSTREAM.md",
-    "docs/ARCHITECTURE.md"
+    "docs/ARCHITECTURE.md",
+    "docs/PROMPTS.md"
   ],
   "dsh": {
     "bundle": {

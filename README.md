@@ -60,6 +60,7 @@ pnpm pack --pack-destination dist
 
 - [架构与开发入口](docs/ARCHITECTURE.md)
 - [使用与升级说明](docs/USER-GUIDE.md)
+- [提示词与接单规则配置说明](docs/PROMPTS.md)
 - [相对上游的适配边界](docs/UPSTREAM.md)
 
 ## 验证与当前边界

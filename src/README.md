@@ -13,3 +13,5 @@ index.ts 导出 Cordis 插件 apply/Config 与 core 的公开接口；sources/ki
 依赖 package.json 中的 DSH peer 包、官方飞书 SDK、SQLite、React。核心概念和状态语义见 ../docs/ARCHITECTURE.md；适配记录见 ../docs/UPSTREAM.md。默认中文、默认概览、配置标签最后，所有执行任务使用 DSH Worker Session。
 
 飞书 SDK 传输层对数组查询参数使用重复同名编码；订阅轮询沿用原型规则，成功补查会自动清除线程的旧轮询错误。
+
+提示词的读取角色、规则派工范围与来源技能协议见 [配置说明](../docs/PROMPTS.md)。公共提示按通用目标执行；来源技能保留平台衔接要求，具体团队流程由用户配置。

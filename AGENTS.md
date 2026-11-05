@@ -7,7 +7,7 @@
 - 当前状态：以官方原型完整实现为基线进行通用适配；架构见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，上游与差异见 [docs/UPSTREAM.md](docs/UPSTREAM.md)。
 - 安装依赖：`pnpm install`；类型检查：`pnpm typecheck`；测试：`pnpm test`；构建：`pnpm build`；完整检查：`pnpm check`；打包：`pnpm pack --pack-destination dist`。
 - Node.js ^22.19.0 或 >=24，pnpm 11.7.0；测试沿用官方 `tests/**/*.spec.{ts,tsx}`，参考仓库不参与构建和测试。
-- 使用说明和已知边界见 [docs/USER-GUIDE.md](docs/USER-GUIDE.md)。
+- 使用说明和已知边界见 [docs/USER-GUIDE.md](docs/USER-GUIDE.md)；提示词作用、规则派工和技能配置见 [docs/PROMPTS.md](docs/PROMPTS.md)。
 - 已确认：通用任务为默认能力；翻译、项目拆解、知识收录等场景要求作为 Worker 上下文配置。在用户配置权限内自动执行并汇报。
 - 上游基线和适配差异见 [docs/UPSTREAM.md](docs/UPSTREAM.md)。参考仓库和文章目录作为本地输入，不纳入根仓库。
 

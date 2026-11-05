@@ -73,3 +73,39 @@ it('keyword edits use the original policy version mechanism to invalidate stale 
   const displayOnly = structuredClone(first); displayOnly.sources.feishu!.config.readPageSize = 30
   expect(policyVersion(displayOnly)).toBe(policyVersion(first))
 })
+
+it('routes a proactive translation through the original assessment and hands only matched rules to its Worker', async () => {
+  const host = await startRuntime()
+  try {
+    const settings = host.runtime.store.settings()
+    const rules = [
+      { id: 'translate', name: '文章翻译', enabled: true, instruction: '群内推荐外文文章时翻译，保留来源，参考 translation 技能。' },
+      { id: 'filing', name: '文件归档', enabled: true, instruction: '归档用户指定的文件。' },
+    ]
+    host.runtime.store.saveSettings({ ...settings, policy: { ...settings.policy, rules } })
+    const trigger = feishu('translate', '推荐这篇外文文章，请整理中文译文。', { mentions: [] })
+    host.runtime.receive(trigger)
+    await host.runtime.idle()
+    expect(host.relays(host.runtime.masterId).at(-1)).toMatchObject({ kind: 'candidate', strength: 'inferred' })
+    await host.runTool(host.runtime.masterId, 'orchestrator_eval', { trigger_id: trigger.id })
+    const result = await host.runTool(host.runtime.masterId, 'orchestrator_eval_decide', {
+      trigger_id: trigger.id, decision: 'accept', title: '翻译推荐文章', worktree_name: 'translate-article',
+      scope: '翻译该文章并保留来源', intent_evidence: '推荐这篇外文文章，请整理中文译文。', reason: '目标清晰且符合文章翻译规则',
+      acknowledgement: '收到，整理这篇文章的中文译文并保留来源。',
+      rule_assessments: [{ rule_id: 'translate', matched: true, reason: '明确提出中文译文目标' },
+        { rule_id: 'filing', matched: false, reason: '没有文件归档请求' }],
+      direction: { implementation_requested: true, target_basis: 'specified', requires_design_decision: false,
+        evidence: '文章已有来源，交付目标为中文译文' },
+    })
+    await host.runtime.idle()
+    const ticket = host.runtime.store.tickets.get((result.ticket as { ticket_id: string }).ticket_id)!
+    const sessionId = `worker-${ticket.id}`
+    expect(ticket.mandate.basis.rules).toEqual(['translate'])
+    const assignment = await host.runTool(sessionId, 'orchestrator_read', { resource: `ticket/${ticket.id}/assignment` })
+    expect(assignment.text).toContain(rules[0]!.instruction)
+    expect(assignment.text).not.toContain(rules[1]!.instruction)
+    expect(host.agents.has(sessionId)).toBe(true)
+    const explicit = await host.acceptedTicket(feishu('explicit-translation', '请把这段文字译成中文。'))
+    expect(explicit.ticket.execution?.assignment).not.toContain(rules[0]!.instruction)
+  } finally { await host.stop() }
+})

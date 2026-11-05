@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const publicDocs = ['docs/USER-GUIDE.md', 'docs/UPSTREAM.md', 'docs/ARCHITECTURE.md']
+const publicDocs = ['docs/USER-GUIDE.md', 'docs/UPSTREAM.md', 'docs/ARCHITECTURE.md', 'docs/PROMPTS.md']
 const documents = ['README.md', 'AGENTS.md', 'src/README.md', 'src/CHANGELOG.md', ...publicDocs]
 const read = (path: string): string => readFileSync(join(ROOT, path), 'utf8')
 const manifest = JSON.parse(read('package.json')) as { files: string[]; scripts: Record<string, string>; dependencies: Record<string, string>; devDependencies: Record<string, string>; peerDependencies: Record<string, string> }
