@@ -205,7 +205,10 @@ export class Sessions {
   /** Returns a tool registrar for `agent` that renders tool output as JSON text and attaches `output.image` as an image when present. */
   private registerTool(agent: Agent, binding: SessionBinding): RegisterTool {
     return (name, description, schema, execute) => {
-      binding.disposers.push(agent.ctx.tools.register({ name, description, parameters: z.toJSONSchema(schema),
+      // dsh-tools projects tool parameters through a lossless-JSON snapshot and throws
+      // on anything that is not plain JSON; zod v4 toJSONSchema can emit such values,
+      // and one bad tool 500s the whole /tools list — round-trip to plain JSON first.
+      binding.disposers.push(agent.ctx.tools.register({ name, description, parameters: JSON.parse(JSON.stringify(z.toJSONSchema(schema))),
         output: { schema: { type: 'object', additionalProperties: true }, render: (_args, value) => {
           const text = { type: 'text' as const, text: JSON.stringify(value) }
           const image = value && typeof value === 'object' && 'image' in value ? (value as { image: never }).image : undefined
